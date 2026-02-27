@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Rapports</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{font-family:Arial;margin:0;background:#f2f6f9;}
+header,footer{background:#2e86c1;color:white;text-align:center;padding:15px;}
+nav{background:#1b4f72;text-align:center;}
+nav a{color:white;padding:12px;display:inline-block;text-decoration:none;}
+nav a:hover{background:#154360;}
+.container{padding:20px;}
+.card{
+    background:white;
+    padding:20px;
+    margin:10px;
+    border-radius:8px;
+}
+</style>
+</head>
+
+<body>
+
+<header><h1>Rapports</h1></header>
+
+<nav>
+<a href="index.html">Accueil</a>
+<a href="medicaments.html">Médicaments</a>
+<a href="stock.html">Stock</a>
+<a href="ventes.html">Ventes</a>
+<a href="rapport.html">Rapports</a>
+</nav>
+
+<div class="container">
+
+<div class="card">
+<h3>Nombre de médicaments</h3>
+<p id="nb"></p>
+</div>
+
+<div class="card">
+<h3>Valeur du stock</h3>
+<p id="valeur"></p>
+</div>
+
+</div>
+
+<footer>Gestion Pharmacie</footer>
+
+<script>
+let meds = JSON.parse(localStorage.getItem("medicaments")) || [];
+
+document.getElementById("nb").innerText = meds.length;
+
+let total=0;
+meds.forEach(m=>{
+    total+=m.prix*m.qte;
+});
+
+document.getElementById("valeur").innerText = total+" $";
+</script>
+
+</body>
+</html>

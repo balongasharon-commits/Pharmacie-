@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Stock</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{font-family:Arial;margin:0;background:#f2f6f9;}
+header,footer{background:#2e86c1;color:white;text-align:center;padding:15px;}
+nav{background:#1b4f72;text-align:center;}
+nav a{color:white;padding:12px;display:inline-block;text-decoration:none;}
+nav a:hover{background:#154360;}
+.container{padding:20px;}
+
+.low{color:red;font-weight:bold;}
+table{width:100%;background:white;border-collapse:collapse;}
+th,td{border:1px solid #ccc;padding:8px;text-align:center;}
+</style>
+</head>
+
+<body>
+
+<header><h1>Stock</h1></header>
+
+<nav>
+<a href="index.html">Accueil</a>
+<a href="medicaments.html">Médicaments</a>
+<a href="stock.html">Stock</a>
+<a href="ventes.html">Ventes</a>
+<a href="rapport.html">Rapports</a>
+</nav>
+
+<div class="container">
+
+<h3>État du stock</h3>
+
+<table>
+<thead>
+<tr>
+<th>Nom</th>
+<th>Quantité</th>
+<th>Statut</th>
+</tr>
+</thead>
+<tbody id="stock"></tbody>
+</table>
+
+</div>
+
+<footer>Gestion Pharmacie</footer>
+
+<script>
+let meds = JSON.parse(localStorage.getItem("medicaments")) || [];
+let tbody = document.getElementById("stock");
+
+function charger(){
+    tbody.innerHTML="";
+
+    meds.forEach(m=>{
+        let statut = m.qte<5 ? "Stock faible" : "Normal";
+        let classe = m.qte<5 ? "low" : "";
+
+        tbody.innerHTML+=`
+        <tr>
+            <td>${m.nom}</td>
+            <td>${m.qte}</td>
+            <td class="${classe}">${statut}</td>
+        </tr>`;
+    });
+}
+
+charger();
+</script>
+
+</body>
+</html>

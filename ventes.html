@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Ventes</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{font-family:Arial;margin:0;background:#f2f6f9;}
+header,footer{background:#2e86c1;color:white;text-align:center;padding:15px;}
+nav{background:#1b4f72;text-align:center;}
+nav a{color:white;padding:12px;display:inline-block;text-decoration:none;}
+nav a:hover{background:#154360;}
+.container{padding:20px;}
+
+select,input,button{padding:8px;margin:5px;}
+
+table{width:100%;background:white;border-collapse:collapse;}
+th,td{border:1px solid #ccc;padding:8px;text-align:center;}
+
+button{background:#2e86c1;color:white;border:none;}
+</style>
+</head>
+
+<body>
+
+<header><h1>Ventes</h1></header>
+
+<nav>
+<a href="index.html">Accueil</a>
+<a href="medicaments.html">Médicaments</a>
+<a href="stock.html">Stock</a>
+<a href="ventes.html">Ventes</a>
+<a href="rapport.html">Rapports</a>
+</nav>
+
+<div class="container">
+
+<h3>Nouvelle vente</h3>
+
+<select id="produit"></select>
+<input type="number" id="qte" placeholder="Quantité">
+<button onclick="ajouter()">Ajouter</button>
+
+<h3>Panier</h3>
+
+<table>
+<thead>
+<tr>
+<th>Produit</th>
+<th>Prix</th>
+<th>Qté</th>
+<th>Total</th>
+</tr>
+</thead>
+<tbody id="panier"></tbody>
+</table>
+
+<h3>Total : <span id="total">0</span> $</h3>
+
+<button onclick="valider()">Valider la vente</button>
+
+</div>
+
+<footer>Gestion Pharmacie</footer>
+
+<script>
+let meds = JSON.parse(localStorage.getItem("medicaments")) || [];
+let panier=[];
+
+let select = document.getElementById("produit");
+
+function chargerProduits(){
+    meds.forEach((m,i)=>{
+        select.innerHTML+=`<option value="${i}">${m.nom}</option>`;
+    });
+}
+
+function ajouter(){
+    let i = select.value;
+    let q = parseInt(document.getElementById("qte").value);
+
+    if(!q || q<=0){
+        alert("Quantité invalide");
+        return;
+    }
+
+    if(meds[i].qte < q){
+        alert("Stock insuffisant");
+        return;
+    }
+
+    panier.push({
+        nom:meds[i].nom,
+        prix:meds[i].prix,
+        qte:q
+    });
+
+    afficher();
+}
+
+function afficher(){
+    let tbody=document.getElementById("panier");
+    let total=0;
+    tbody.innerHTML="";
+
+    panier.forEach(p=>{
+        let t = p.prix*p.qte;
+        total+=t;
+
+        tbody.innerHTML+=`
+        <tr>
+        <td>${p.nom}</td>
+        <td>${p.prix}</td>
+        <td>${p.qte}</td>
+        <td>${t}</td>
+        </tr>`;
+    });
+
+    document.getElementById("total").innerText=total;
+}
+
+function valider(){
+    panier.forEach(p=>{
+        let m = meds.find(x=>x.nom==p.nom);
+        m.qte -= p.qte;
+    });
+
+    localStorage.setItem("medicaments",JSON.stringify(meds));
+
+    alert("Vente validée !");
+    panier=[];
+    afficher();
+}
+
+chargerProduits();
+</script>
+
+</body>
+</html>
